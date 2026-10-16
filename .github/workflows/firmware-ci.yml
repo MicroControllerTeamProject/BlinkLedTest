@@ -8,8 +8,38 @@ on:
 permissions:
   contents: read
 jobs:
+  detect-sketch:
+    name: Detect AVR sketch
+    runs-on: ubuntu-latest
+    outputs:
+      present: ${{ steps.sketch.outputs.present }}
+    env:
+      GPM_SKETCH_PATH: "BlinkLedTest"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Locate sketch
+        id: sketch
+        shell: bash
+        run: |
+          if [[ ! -d "$GPM_SKETCH_PATH" ]]; then
+            echo 'present=false' >> "$GITHUB_OUTPUT"
+            echo "### Compilazione non eseguita: cartella sketch assente" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          mapfile -t sketches < <(find "$GPM_SKETCH_PATH" -maxdepth 1 -type f -name '*.ino')
+          if (( ${#sketches[@]} == 0 )); then
+            echo 'present=false' >> "$GITHUB_OUTPUT"
+            echo "### Compilazione non eseguita: nessun file .ino" >> "$GITHUB_STEP_SUMMARY"
+          elif (( ${#sketches[@]} > 1 )); then
+            echo "Multiple .ino files found in $GPM_SKETCH_PATH" >&2
+            exit 1
+          else
+            echo 'present=true' >> "$GITHUB_OUTPUT"
+          fi
   avr-build:
     name: AVR firmware build
+    needs: detect-sketch
+    if: needs.detect-sketch.outputs.present == 'true'
     runs-on: ubuntu-latest
     env:
       GPM_SKETCH_PATH: "BlinkLedTest"
@@ -18,25 +48,8 @@ jobs:
       GPM_CORE_URL: ""
     steps:
       - uses: actions/checkout@v4
-      - name: Locate sketch
-        id: sketch
-        shell: bash
-        run: |
-          if [[ ! -d "$GPM_SKETCH_PATH" ]]; then
-            echo "Sketch directory not found: $GPM_SKETCH_PATH" >&2
-            exit 1
-          fi
-          mapfile -t sketches < <(find "$GPM_SKETCH_PATH" -maxdepth 1 -type f -name '*.ino')
-          if (( ${#sketches[@]} == 0 )); then
-            echo 'present=false' >> "$GITHUB_OUTPUT"
-            echo 'No .ino sketch on this branch; firmware compilation deferred'
-          else
-            echo 'present=true' >> "$GITHUB_OUTPUT"
-          fi
       - uses: arduino/setup-arduino-cli@v2
-        if: steps.sketch.outputs.present == 'true'
       - name: Install board core
-        if: steps.sketch.outputs.present == 'true'
         shell: bash
         run: |
           if [[ -n "$GPM_CORE_URL" ]]; then
@@ -47,7 +60,6 @@ jobs:
             arduino-cli core install "$GPM_CORE"
           fi
       - name: Generate CI version header
-        if: steps.sketch.outputs.present == 'true'
         shell: bash
         run: |
           VERSION=XXXXXXX
@@ -56,5 +68,4 @@ jobs:
           fi
           printf '#pragma once\n#define GIT_VERSION "%s"\n' "$VERSION" > "$GPM_SKETCH_PATH/GitVersion.generated.h"
       - name: Compile AVR firmware
-        if: steps.sketch.outputs.present == 'true'
         run: arduino-cli compile --fqbn "$GPM_FQBN" "$GPM_SKETCH_PATH"
