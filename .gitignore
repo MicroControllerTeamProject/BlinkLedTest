@@ -1,2 +1,6 @@
 .vs/
 BlinkLedTest/__vm/
+GitVersion.generated.h
+GitVersion.generated.tmp
+!GitVersion.h
+__vm/
