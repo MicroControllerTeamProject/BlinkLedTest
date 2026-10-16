@@ -68,4 +68,4 @@ jobs:
           fi
           printf '#pragma once\n#define GIT_VERSION "%s"\n' "$VERSION" > "$GPM_SKETCH_PATH/GitVersion.generated.h"
       - name: Compile AVR firmware
-        run: arduino-cli compile --fqbn "$GPM_FQBN" "$GPM_SKETCH_PATH"
+        run: python3 .gpm/avr-ci.py "$GPM_FQBN" "$GPM_SKETCH_PATH"
