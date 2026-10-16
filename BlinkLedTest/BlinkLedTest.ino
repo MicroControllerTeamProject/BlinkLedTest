@@ -4,6 +4,8 @@
  Author:	luigi
 */
 #include <ArduinoJson.h>
+#include <ChipTemp.h>
+ChipTemp temperatura;
 // the setup function runs once when you press reset or power the board
 void setup() {
 	Serial.begin(9600);
