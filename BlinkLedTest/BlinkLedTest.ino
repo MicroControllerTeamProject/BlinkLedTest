@@ -3,7 +3,7 @@
  Created:	10/15/2026 1:32:02 AM
  Author:	luigi
 */
-
+#include <ArduinoJson.h>
 // the setup function runs once when you press reset or power the board
 void setup() {
 	Serial.begin(9600);
