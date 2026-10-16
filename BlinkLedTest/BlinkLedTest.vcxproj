@@ -121,7 +121,7 @@
       <ForcedIncludeFiles>$(ProjectDir)..\..\..\..\program files\microsoft visual studio\2022\enterprise\common7\ide\extensions\2bqx1gfn.tss\Micro Platforms\default\vm-intelli-pre.h;$(ProjectDir)..\..\..\..\Users\luigi\AppData\Local\Temp\VMBuilds\BlinkLedTest\nano_atmega328old\Debug\.vmintelli\34bdf1d6fa2d00bd5ddfb005f7484391\vm-intelli-gcc-defines.h;$(ProjectDir)..\..\..\..\program files\microsoft visual studio\2022\enterprise\common7\ide\extensions\2bqx1gfn.tss\Micro Platforms\default\vm-intelli-post.h;$(ProjectDir)__vm\.BlinkLedTest.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <UndefineAllPreprocessorDefinitions>true</UndefineAllPreprocessorDefinitions>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
-      <PreprocessorDefinitions>_VMICRO_INTELLISENSE;__AVR_atmega328p__;__AVR_ATmega328P__;__AVR_ATmega328p__;_VMDEBUG=1;F_CPU=16000000L;ARDUINO=108019;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_VMICRO_INTELLISENSE;__AVR_atmega328p__;__AVR_ATmega328P__;__AVR_ATmega328p__;F_CPU=16000000L;ARDUINO=108019;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
